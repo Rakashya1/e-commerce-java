@@ -4,6 +4,8 @@ import com.example.ecommerce.model.User;
 import com.example.ecommerce.service.AuthService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +18,10 @@ public class AuthController {
     private AuthService authService;
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            return "redirect:/products";
+        }
         return "login";
     }
 
@@ -40,25 +45,10 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login")
-    public String login(@RequestParam String username,
-                       @RequestParam String password,
-                       HttpSession session,
-                       RedirectAttributes redirectAttributes) {
-        try {
-            User user = authService.login(username, password);
-            session.setAttribute("userId", user.getId());
-            session.setAttribute("username", user.getUsername());
-            return "redirect:/products";
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/login";
-        }
-    }
-
     @GetMapping("/logout")
     public String logout(HttpSession session) {
+        SecurityContextHolder.clearContext();
         session.invalidate();
-        return "redirect:/login";
+        return "redirect:/login?logout";
     }
 }

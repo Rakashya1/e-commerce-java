@@ -7,6 +7,8 @@ import com.example.ecommerce.repository.OrderRepository;
 import com.example.ecommerce.repository.ProductRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,11 @@ public class CartController {
 
     @GetMapping
     public String showCart(HttpSession session, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return "redirect:/login";
+        }
+
         List<CartItem> cart = getCartFromSession(session);
         double total = cart.stream().mapToDouble(CartItem::getTotalPrice).sum();
         model.addAttribute("cart", cart);
@@ -35,7 +42,8 @@ public class CartController {
 
     @PostMapping("/add/{id}")
     public String addToCart(@PathVariable String id, HttpSession session, RedirectAttributes redirectAttributes) {
-        if (session.getAttribute("userId") == null) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
             redirectAttributes.addFlashAttribute("error", "Please login to add items to cart");
             return "redirect:/login";
         }
@@ -86,8 +94,8 @@ public class CartController {
 
     @PostMapping("/checkout")
     public String checkout(HttpSession session, RedirectAttributes redirectAttributes) {
-        String userId = (String) session.getAttribute("userId");
-        if (userId == null) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
             redirectAttributes.addFlashAttribute("error", "Please login to checkout");
             return "redirect:/login";
         }
@@ -100,7 +108,7 @@ public class CartController {
 
         // Create new order
         Order order = new Order();
-        order.setUserId(userId);
+        order.setUserId(auth.getName());
         order.setItems(new ArrayList<>(cart));
         order.setTotalAmount(cart.stream().mapToDouble(CartItem::getTotalPrice).sum());
         orderRepository.save(order);
