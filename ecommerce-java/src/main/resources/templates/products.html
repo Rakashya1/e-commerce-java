@@ -27,6 +27,7 @@
     </header>
 
     <div class="container">
+        <!-- Restore the filters sidebar -->
         <aside class="filters-sidebar">
             <form id="filterForm" action="/products" method="get" class="filter-form">
                 <input type="hidden" name="search" th:value="${searchQuery}">
@@ -88,26 +89,37 @@
 
             <div class="product-grid">
                 <div class="product-card" th:each="product : ${products}">
-                    <div class="discount-badge" th:if="${product.isNew}">New</div>
-                    <img th:src="${product.image ?: '/images/default-product.jpg'}" th:alt="${product.name}" class="product-image">
-                    <div class="product-info">
-                        <h3 class="product-name" th:text="${product.name}">Product Name</h3>
+                    <div class="product-image-container">
+                        <img th:src="${product.image ?: '/images/default-product.jpg'}" th:alt="${product.name}">
+                        <div class="discount-badge" th:if="${product.isNew}">-17%</div>
+                    </div>
+                    <div class="product-details">
                         <div class="product-category" th:text="${product.category}">Category</div>
-                        <div class="product-rating">
+                        <h3 class="product-name" th:text="${product.name}">Product Name</h3>
+                        <div class="rating">
                             <div class="stars">
-                                <i th:each="star : ${#numbers.sequence(1, 5)}"
-                                   th:class="${star <= product.rating ? 'fas fa-star' : 'far fa-star'}"></i>
+                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <i th:class="${i <= product.rating ? 'fas fa-star' : 'far fa-star'}"></i>
+                                </th:block>
                             </div>
-                            <span class="rating-number" th:text="'(' + ${product.rating} + ')'"></span>
+                            <span class="rating-value" th:text="'(' + ${#numbers.formatDecimal(product.rating, 1, 1)} + ')'"></span>
                         </div>
-                        <div class="product-price">
-                            <span class="price" th:text="'$' + ${#numbers.formatDecimal(product.price, 0, 2)}">$0.00</span>
+                        <div class="price-container">
+                            <div class="current-price" th:text="'$' + ${#numbers.formatDecimal(product.price, 0, 2)}"></div>
+                            <div class="original-price" th:if="${product.isNew}" 
+                                 th:text="'$' + ${#numbers.formatDecimal(product.price * 1.17, 0, 2)}"></div>
                         </div>
-                        <form th:action="@{'/cart/add/' + ${product.id}}" method="post">
-                            <button type="submit" class="add-to-cart-btn">
-                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                        <div class="product-actions">
+                            <button class="wishlist-btn">
+                                <i class="far fa-heart"></i>
                             </button>
-                        </form>
+                            <form th:action="@{'/cart/add/' + ${product.id}}" method="post" style="flex-grow: 1;">
+                                <button type="submit" class="add-to-cart-btn">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    Add to Cart
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
