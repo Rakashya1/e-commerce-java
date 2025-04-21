@@ -1,6 +1,15 @@
+com/example/ecommerce/model/Order.class
 com/example/ecommerce/model/Product.class
+com/example/ecommerce/model/CartItem.class
+com/example/ecommerce/repository/OrderRepository.class
+com/example/ecommerce/config/DataInitializer.class
+com/example/ecommerce/service/AuthService.class
+com/example/ecommerce/config/SecurityConfig.class
+com/example/ecommerce/service/CustomUserDetailsService.class
 com/example/ecommerce/EcommerceApplication.class
 com/example/ecommerce/repository/ProductRepository.class
+com/example/ecommerce/model/User.class
+com/example/ecommerce/repository/UserRepository.class
 com/example/ecommerce/controller/ProductController.class
-com/example/ecommerce/config/DataInitializer.class
-com/example/ecommerce/config/SecurityConfig.class
+com/example/ecommerce/controller/AuthController.class
+com/example/ecommerce/controller/CartController.class

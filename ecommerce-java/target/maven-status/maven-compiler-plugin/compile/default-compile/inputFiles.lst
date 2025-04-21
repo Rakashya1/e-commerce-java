@@ -1,6 +1,15 @@
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/controller/CartController.java
 /workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/controller/ProductController.java
-/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/config/SecurityConfig.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/repository/UserRepository.java
 /workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/config/DataInitializer.java
-/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/repository/ProductRepository.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/controller/AuthController.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/model/CartItem.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/model/User.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/repository/OrderRepository.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/model/Order.java
 /workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/model/Product.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/service/AuthService.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/service/CustomUserDetailsService.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/config/SecurityConfig.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/repository/ProductRepository.java
 /workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/EcommerceApplication.java

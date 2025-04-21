@@ -2,33 +2,116 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Products</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        .product-list {
-            list-style: none;
-            padding: 0;
-        }
-        .product-item {
-            padding: 10px;
-            margin: 5px 0;
-            background-color: #f5f5f5;
-            border-radius: 5px;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <h1>Product List</h1>
-    <ul class="product-list">
-        <li th:each="product : ${products}" th:text="${product.name} + ' - $' + ${product.price}" class="product-item"></li>
-    </ul>
+    <header class="header">
+        <nav class="nav-bar">
+            <div class="logo">ShopNow</div>
+            <div class="search-bar">
+                <form action="/products" method="get">
+                    <input type="text" name="search" th:value="${searchQuery}" placeholder="Search products...">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <div class="nav-actions">
+                <a href="/cart" class="cart-icon"><i class="fas fa-shopping-cart"></i></a>
+                <div th:if="${session.username}" class="user-menu">
+                    <span th:text="${session.username}"></span>
+                    <a href="/logout">Logout</a>
+                </div>
+                <a th:unless="${session.username}" href="/login" class="login-btn">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <aside class="filters-sidebar">
+            <form id="filterForm" action="/products" method="get" class="filter-form">
+                <input type="hidden" name="search" th:value="${searchQuery}">
+                
+                <div class="filter-section">
+                    <h3>Categories</h3>
+                    <div class="filter-options">
+                        <label th:each="cat : ${categories}">
+                            <input type="radio" name="category" th:value="${cat}" 
+                                   th:checked="${cat == selectedCategory}">
+                            <span th:text="${cat}"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3>Price Range</h3>
+                    <div class="price-inputs">
+                        <input type="number" name="minPrice" th:value="${minPrice}" 
+                               placeholder="Min" step="0.01">
+                        <span>to</span>
+                        <input type="number" name="maxPrice" th:value="${maxPrice}" 
+                               placeholder="Max" step="0.01">
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3>Rating</h3>
+                    <div class="filter-options">
+                        <label>
+                            <input type="radio" name="minRating" value="4" 
+                                   th:checked="${minRating == 4}">
+                            <span>4★ & above</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="minRating" value="3" 
+                                   th:checked="${minRating == 3}">
+                            <span>3★ & above</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="apply-filters">Apply Filters</button>
+                <a href="/products" class="clear-filters">Clear Filters</a>
+            </form>
+        </aside>
+
+        <main class="products-section">
+            <div class="products-header">
+                <h1>Products</h1>
+                <select name="sort" form="filterForm" class="sort-select" onchange="document.getElementById('filterForm').submit()">
+                    <option value="">Sort by</option>
+                    <option value="price-asc" th:selected="${selectedSort == 'price-asc'}">Price: Low to High</option>
+                    <option value="price-desc" th:selected="${selectedSort == 'price-desc'}">Price: High to Low</option>
+                    <option value="rating-desc" th:selected="${selectedSort == 'rating-desc'}">Highest Rated</option>
+                    <option value="popularity" th:selected="${selectedSort == 'popularity'}">Most Popular</option>
+                </select>
+            </div>
+
+            <div class="product-grid">
+                <div class="product-card" th:each="product : ${products}">
+                    <div class="discount-badge" th:if="${product.isNew}">New</div>
+                    <img th:src="${product.image ?: '/images/default-product.jpg'}" th:alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name" th:text="${product.name}">Product Name</h3>
+                        <div class="product-category" th:text="${product.category}">Category</div>
+                        <div class="product-rating">
+                            <div class="stars">
+                                <i th:each="star : ${#numbers.sequence(1, 5)}"
+                                   th:class="${star <= product.rating ? 'fas fa-star' : 'far fa-star'}"></i>
+                            </div>
+                            <span class="rating-number" th:text="'(' + ${product.rating} + ')'"></span>
+                        </div>
+                        <div class="product-price">
+                            <span class="price" th:text="'$' + ${#numbers.formatDecimal(product.price, 0, 2)}">$0.00</span>
+                        </div>
+                        <form th:action="@{'/cart/add/' + ${product.id}}" method="post">
+                            <button type="submit" class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 </body>
 </html>
