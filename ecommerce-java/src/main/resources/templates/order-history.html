@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order History</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-bar">
+            <div class="logo">ShopNow</div>
+            <div class="nav-actions">
+                <a href="/products">Continue Shopping</a>
+                <a href="/cart" class="cart-icon"><i class="fas fa-shopping-cart"></i></a>
+                <div th:if="${session.username}" class="user-menu">
+                    <span th:text="${session.username}"></span>
+                    <a href="/logout">Logout</a>
+                </div>
+                <a th:unless="${session.username}" href="/login" class="login-btn">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="cart-container">
+            <h1>Order History</h1>
+            
+            <div th:if="${#lists.isEmpty(orders)}" class="empty-cart">
+                <p>You haven't placed any orders yet</p>
+                <a href="/products" class="continue-shopping">Start Shopping</a>
+            </div>
+
+            <div th:each="order : ${orders}" class="order-item" style="margin-bottom: 2rem; padding: 1rem; border: 1px solid #dee2e6; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                    <div>
+                        <p><strong>Order ID:</strong> <span th:text="${order.id}"></span></p>
+                        <p><strong>Date:</strong> <span th:text="${#dates.format(order.orderDate, 'dd-MM-yyyy HH:mm')}"></span></p>
+                        <p><strong>Status:</strong> <span th:text="${order.status}" style="text-transform: capitalize;"></span></p>
+                    </div>
+                    <div>
+                        <p><strong>Total Amount:</strong> $<span th:text="${#numbers.formatDecimal(order.totalAmount, 0, 2)}"></span></p>
+                    </div>
+                </div>
+
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${order.items}">
+                            <td class="product-info">
+                                <img th:src="${item.product.image ?: '/images/default-product.jpg'}" 
+                                     th:alt="${item.product.name}" class="cart-item-image">
+                                <div class="product-details">
+                                    <h3 th:text="${item.product.name}">Product Name</h3>
+                                    <p class="category" th:text="${item.product.category}">Category</p>
+                                </div>
+                            </td>
+                            <td th:text="'$' + ${#numbers.formatDecimal(item.product.price, 0, 2)}">Price</td>
+                            <td th:text="${item.quantity}">Quantity</td>
+                            <td th:text="'$' + ${#numbers.formatDecimal(item.totalPrice, 0, 2)}">Total</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
