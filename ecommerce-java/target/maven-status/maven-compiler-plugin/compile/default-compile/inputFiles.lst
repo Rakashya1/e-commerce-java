@@ -1,0 +1,6 @@
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/controller/ProductController.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/config/SecurityConfig.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/config/DataInitializer.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/repository/ProductRepository.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/model/Product.java
+/workspaces/e-commerce-java/ecommerce-java/src/main/java/com/example/ecommerce/EcommerceApplication.java
